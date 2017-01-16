@@ -19,7 +19,7 @@ defmodule SiteChecker.Mixfile do
   def application do
     [mod: {SiteChecker, []},
      applications: [:phoenix, :phoenix_pubsub, :phoenix_html, :cowboy, :logger, :gettext,
-                    :phoenix_ecto, :postgrex]]
+                    :phoenix_ecto, :postgrex, :coherence, :httpoison, :hound]]
   end
 
   # Specifies which paths to compile per environment.
@@ -37,7 +37,13 @@ defmodule SiteChecker.Mixfile do
      {:phoenix_html, "~> 2.6"},
      {:phoenix_live_reload, "~> 1.0", only: :dev},
      {:gettext, "~> 0.11"},
-     {:cowboy, "~> 1.0"}]
+     {:cowboy, "~> 1.0"},
+     {:credo, "~> 0.5", only: [:dev, :test]},
+     {:coherence, "~> 0.3"},
+     {:httpoison, "~> 0.10.0"},
+     {:floki, "~> 0.11.0"},
+     {:hound, "~> 1.0"}
+   ]
   end
 
   # Aliases are shortcuts or tasks specific to the current project.
