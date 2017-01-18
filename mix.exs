@@ -19,7 +19,7 @@ defmodule SiteChecker.Mixfile do
   def application do
     [mod: {SiteChecker, []},
      applications: [:phoenix, :phoenix_pubsub, :phoenix_html, :cowboy, :logger, :gettext,
-                    :phoenix_ecto, :postgrex, :coherence, :httpoison, :hound]]
+                    :phoenix_ecto, :postgrex, :comeonin, :httpoison, :hound]]
   end
 
   # Specifies which paths to compile per environment.
@@ -39,7 +39,7 @@ defmodule SiteChecker.Mixfile do
      {:gettext, "~> 0.11"},
      {:cowboy, "~> 1.0"},
      {:credo, "~> 0.5", only: [:dev, :test]},
-     {:coherence, "~> 0.3"},
+     {:comeonin, "~> 3.0"},
      {:httpoison, "~> 0.10.0"},
      {:floki, "~> 0.11.0"},
      {:hound, "~> 1.0"}
