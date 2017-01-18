@@ -17,3 +17,6 @@ config :site_checker, SiteChecker.Repo,
   database: "site_checker_test",
   hostname: "localhost",
   pool: Ecto.Adapters.SQL.Sandbox
+
+config :site_checker, SiteChecker.Mailer,
+  adapter: Bamboo.TestAdapter

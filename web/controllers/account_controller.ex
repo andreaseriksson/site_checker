@@ -1,7 +1,7 @@
 defmodule SiteChecker.AccountController do
   use SiteChecker.Web, :controller
 
-  alias SiteChecker.{Account, User}
+  alias SiteChecker.{Account, User, Email, Mailer}
 
   plug :put_layout, "session.html"
 
@@ -15,10 +15,10 @@ defmodule SiteChecker.AccountController do
 
     case Repo.insert(changeset) do
       {:ok, account} ->
-        # account.users
-        # |> List.first
-        # |> Emails.welcome_email
-        # |> Mailer.deliver_later
+        account.users
+        |> List.first
+        |> Email.welcome_email
+        |> Mailer.deliver_later
 
         conn
         |> put_flash(:info, "Account created successfully.")

@@ -19,7 +19,7 @@ defmodule SiteChecker.Mixfile do
   def application do
     [mod: {SiteChecker, []},
      applications: [:phoenix, :phoenix_pubsub, :phoenix_html, :cowboy, :logger, :gettext,
-                    :phoenix_ecto, :postgrex, :comeonin, :httpoison, :hound]]
+                    :phoenix_ecto, :postgrex, :comeonin, :bamboo, :bamboo_smtp, :httpoison, :hound]]
   end
 
   # Specifies which paths to compile per environment.
@@ -38,6 +38,7 @@ defmodule SiteChecker.Mixfile do
      {:phoenix_live_reload, "~> 1.0", only: :dev},
      {:gettext, "~> 0.11"},
      {:cowboy, "~> 1.0"},
+     {:bamboo_smtp, "~> 1.2.1"},
      {:credo, "~> 0.5", only: [:dev, :test]},
      {:comeonin, "~> 3.0"},
      {:httpoison, "~> 0.10.0"},

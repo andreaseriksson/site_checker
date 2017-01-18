@@ -41,3 +41,13 @@ config :site_checker, SiteChecker.Repo,
   database: "site_checker_dev",
   hostname: "localhost",
   pool_size: 10
+
+config :site_checker, SiteChecker.Mailer,
+  adapter: Bamboo.SMTPAdapter,
+  server: "localhost",
+  username: "",
+  password: "",
+  port: 1025,
+  # tls: :if_available, # can be `:always` or `:never`
+  # ssl: false, # can be `true`
+  retries: 1
