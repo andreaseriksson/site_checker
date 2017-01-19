@@ -8,6 +8,7 @@
     <meta name="author" content="">
 
     <title>SiteChecker</title>
+    <link rel="stylesheet" href="<%= static_path(@conn, "/bootstrap.min.css") %>">
     <link rel="stylesheet" href="<%= static_path(@conn, "/css/app.css") %>">
     <style>
       form { margin: 0px 10px; }

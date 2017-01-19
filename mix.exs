@@ -41,6 +41,7 @@ defmodule SiteChecker.Mixfile do
      {:bamboo_smtp, "~> 1.2.1"},
      {:credo, "~> 0.5", only: [:dev, :test]},
      {:comeonin, "~> 3.0"},
+     {:guardian, "~> 0.14"},
      {:httpoison, "~> 0.10.0"},
      {:floki, "~> 0.11.0"},
      {:hound, "~> 1.0"}
