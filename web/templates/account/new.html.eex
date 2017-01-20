@@ -41,5 +41,5 @@
   <hr>
   <p>
     Already have an account?
-    <% #= link gettext("Sign In"), to: session_path(@conn, :new) %></p>
+    <%= link "Sign In", to: session_path(@conn, :new) %></p>
 <% end %>
