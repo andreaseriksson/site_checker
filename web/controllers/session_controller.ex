@@ -24,7 +24,8 @@ defmodule SiteChecker.SessionController do
   end
 
   def destroy(conn, _params) do
-    Guardian.Plug.sign_out(conn)
+    conn
+    |> Guardian.Plug.sign_out
     |> put_flash(:info, "Logged out successfully.")
     |> redirect(to: "/signin")
   end
