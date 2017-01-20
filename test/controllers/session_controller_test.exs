@@ -1,7 +1,7 @@
 defmodule SiteChecker.SessionControllerTest do
   use SiteChecker.ConnCase
 
-  alias SiteChecker.{Account, User}
+  alias SiteChecker.Account
   @valid_attrs %{email: "some_email@example.com", password: "abcdef"}
   @invalid_attrs %{email: "", password: ""}
   @account %{ name: "some content",
@@ -37,8 +37,6 @@ defmodule SiteChecker.SessionControllerTest do
   end
 
   test "logs out the user and destroys session and redirect to login", %{conn: conn} do
-    user = Repo.get_by(User, email: @valid_attrs[:email])
-
     conn =
       conn
       |> post(session_path(conn, :create), session: @valid_attrs)

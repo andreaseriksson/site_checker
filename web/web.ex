@@ -52,6 +52,7 @@ defmodule SiteChecker.Web do
       import SiteChecker.Router.Helpers
       import SiteChecker.ErrorHelpers
       import SiteChecker.Gettext
+      import SiteChecker.AppHelper
     end
   end
 
