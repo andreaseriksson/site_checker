@@ -9,9 +9,10 @@ defmodule SiteChecker.Router do
     plug :put_secure_browser_headers
   end
 
-  pipeline :browser_session do
+  pipeline :browser_auth_session do
     plug Guardian.Plug.VerifySession
     plug Guardian.Plug.LoadResource
+    plug Guardian.Plug.EnsureAuthenticated, handler: SiteChecker.ErrorHandler
   end
 
   pipeline :api do
@@ -21,7 +22,7 @@ defmodule SiteChecker.Router do
   end
 
   scope "/", SiteChecker do
-    pipe_through [:browser, :browser_session] # Use the default browser stack
+    pipe_through [:browser]
 
     get "/", PageController, :index
     get "/signup", AccountController, :new
@@ -29,6 +30,12 @@ defmodule SiteChecker.Router do
     get "/signin", SessionController, :new
     post "/session", SessionController, :create
     delete "/session", SessionController, :destroy
+  end
+
+  scope "/app", SiteChecker do
+    pipe_through [:browser, :browser_auth_session]
+
+    get "/", DashboardController, :index
   end
 
   # Other scopes may use custom stacks.

@@ -14,7 +14,7 @@ defmodule SiteChecker.AccountControllerTest do
 
 	test "creates resource and redirects when data is valid", %{conn: conn} do
 		conn = post conn, account_path(conn, :create), account: @valid_attrs
-		assert redirected_to(conn) == page_path(conn, :index)
+		assert redirected_to(conn) == dashboard_path(conn, :index)
 		assert Repo.get_by(Account, name: @valid_attrs[:name])
 		assert Repo.get_by(User, email: @valid_attrs[:users]["0"][:email])
 	end

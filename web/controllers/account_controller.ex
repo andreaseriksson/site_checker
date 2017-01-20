@@ -15,14 +15,16 @@ defmodule SiteChecker.AccountController do
 
     case Repo.insert(changeset) do
       {:ok, account} ->
-        account.users
-        |> List.first
+        user = account.users |> List.first
+
+        user
         |> Email.welcome_email
         |> Mailer.deliver_later
 
         conn
+        |> Guardian.Plug.sign_in(user)
         |> put_flash(:info, "Account created successfully.")
-        |> redirect(to: page_path(conn, :index))
+        |> redirect(to: dashboard_path(conn, :index))
       {:error, changeset} ->
         render(conn, "new.html", changeset: changeset)
     end
