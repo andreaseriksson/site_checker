@@ -19,7 +19,9 @@ defmodule SiteChecker.Mixfile do
   def application do
     [mod: {SiteChecker, []},
      applications: [:phoenix, :phoenix_pubsub, :phoenix_html, :cowboy, :logger, :gettext,
-                    :phoenix_ecto, :postgrex, :comeonin, :bamboo, :bamboo_smtp, :httpoison, :hound]]
+                    :phoenix_ecto, :postgrex, :comeonin, :bamboo, :bamboo_smtp, :httpoison, :hound],
+     test_coverage: [tool: Coverex.Task]
+    ]
   end
 
   # Specifies which paths to compile per environment.
@@ -44,7 +46,8 @@ defmodule SiteChecker.Mixfile do
      {:guardian, "~> 0.14"},
      {:httpoison, "~> 0.10.0"},
      {:floki, "~> 0.11.0"},
-     {:hound, "~> 1.0"}
+     {:hound, "~> 1.0"},
+     {:coverex, "~> 1.4.10", only: :test}
    ]
   end
 
