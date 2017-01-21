@@ -36,6 +36,7 @@ defmodule SiteChecker.Router do
     pipe_through [:browser, :browser_auth_session]
 
     get "/", DashboardController, :index
+    resources "/site_checks", SiteCheckController
   end
 
   # Other scopes may use custom stacks.

@@ -1,0 +1,23 @@
+<h2>Show site check</h2>
+
+<ul>
+
+  <li>
+    <strong>Account:</strong>
+    <%= @site_check.account_id %>
+  </li>
+
+  <li>
+    <strong>Name:</strong>
+    <%= @site_check.name %>
+  </li>
+
+  <li>
+    <strong>Scheduled:</strong>
+    <%= @site_check.scheduled %>
+  </li>
+
+</ul>
+
+<%= link "Edit", to: site_check_path(@conn, :edit, @site_check) %>
+<%= link "Back", to: site_check_path(@conn, :index) %>

@@ -1,0 +1,30 @@
+<h2>Listing site checks</h2>
+
+<table class="table">
+  <thead>
+    <tr>
+      <th>Account</th>
+      <th>Name</th>
+      <th>Scheduled</th>
+
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+<%= for site_check <- @site_checks do %>
+    <tr>
+      <td><%= site_check.account_id %></td>
+      <td><%= site_check.name %></td>
+      <td><%= site_check.scheduled %></td>
+
+      <td class="text-right">
+        <%= link "Show", to: site_check_path(@conn, :show, site_check), class: "btn btn-default btn-xs" %>
+        <%= link "Edit", to: site_check_path(@conn, :edit, site_check), class: "btn btn-default btn-xs" %>
+        <%= link "Delete", to: site_check_path(@conn, :delete, site_check), method: :delete, data: [confirm: "Are you sure?"], class: "btn btn-danger btn-xs" %>
+      </td>
+    </tr>
+<% end %>
+  </tbody>
+</table>
+
+<%= link "New site check", to: site_check_path(@conn, :new) %>

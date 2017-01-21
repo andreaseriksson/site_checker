@@ -1,0 +1,6 @@
+<h2>New site check</h2>
+
+<%= render "form.html", changeset: @changeset,
+                        action: site_check_path(@conn, :create) %>
+
+<%= link "Back", to: site_check_path(@conn, :index) %>

@@ -1,22 +1,12 @@
 defmodule SiteChecker.SessionControllerTest do
   use SiteChecker.ConnCase
+  import SiteChecker.AccountUserSetup
 
-  alias SiteChecker.Account
-  @valid_attrs %{email: "some_email@example.com", password: "abcdef"}
   @invalid_attrs %{email: "", password: ""}
-  @account %{ name: "some content",
-              users: [%{
-                name: "Some name",
-                email: "some_email@example.com",
-                password: "abcdef",
-                password_confirmation: "abcdef"
-              }]
-            }
 
-  setup do
-    Account.changeset(%Account{}, @account)
-    |> Repo.insert
-    :ok
+  setup %{conn: conn} do
+    setup_account_and_user
+    {:ok, conn: conn}
   end
 
   test "GET /signin", %{conn: conn} do
@@ -25,7 +15,7 @@ defmodule SiteChecker.SessionControllerTest do
   end
 
   test "creates session and redirects when data is valid", %{conn: conn} do
-    conn = post conn, session_path(conn, :create), session: @valid_attrs
+    conn = post conn, session_path(conn, :create), session: login_attrs
     assert redirected_to(conn) == page_path(conn, :index)
     assert Guardian.Plug.current_resource(conn).email == "some_email@example.com"
   end
@@ -39,7 +29,7 @@ defmodule SiteChecker.SessionControllerTest do
   test "logs out the user and destroys session and redirect to login", %{conn: conn} do
     conn =
       conn
-      |> post(session_path(conn, :create), session: @valid_attrs)
+      |> post(session_path(conn, :create), session: login_attrs)
       |> delete(session_path(conn, :destroy))
 
     assert redirected_to(conn) == session_path(conn, :new)
