@@ -5,7 +5,7 @@ defmodule SiteChecker.Repo.Migrations.CreateSiteCheck do
     create table(:site_checks) do
       add :name, :string
       add :scheduled, :boolean, default: false, null: false
-      add :account_id, references(:accounts, on_delete: :nothing)
+      add :account_id, references(:accounts, on_delete: :delete_all)
 
       timestamps()
     end

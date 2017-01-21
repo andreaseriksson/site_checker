@@ -1,5 +1,5 @@
 defmodule SiteChecker.AccountUserSetup do
-  alias SiteChecker.{Repo, Account, User}
+  alias SiteChecker.{Repo, Account}
 
   @login_attrs %{email: "some_email@example.com", password: "abcdef"}
 

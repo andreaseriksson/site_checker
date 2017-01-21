@@ -5,6 +5,7 @@ defmodule SiteChecker.Account do
     field :name, :string
     field :inactivated_at, Ecto.DateTime
     has_many :users, SiteChecker.User
+    has_many :site_checks, SiteChecker.SiteCheck
 
     timestamps()
   end
