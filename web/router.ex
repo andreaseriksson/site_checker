@@ -36,7 +36,10 @@ defmodule SiteChecker.Router do
     pipe_through [:browser, :browser_auth_session]
 
     get "/", DashboardController, :index
-    resources "/site_checks", SiteCheckController
+    resources "/site_checks", SiteCheckController do
+      resources "/steps", StepController, only: [:create, :update, :delete]
+      resources "/expectations", ExpectationController
+    end
   end
 
   # Other scopes may use custom stacks.

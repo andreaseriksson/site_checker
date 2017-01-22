@@ -5,6 +5,8 @@ defmodule SiteChecker.SiteCheck do
     field :name, :string
     field :scheduled, :boolean, default: false
     belongs_to :account, SiteChecker.Account
+    has_many :steps, SiteChecker.Step
+    has_many :expectations, SiteChecker.Expectation
 
     timestamps()
   end

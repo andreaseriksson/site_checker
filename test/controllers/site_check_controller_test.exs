@@ -2,6 +2,7 @@ defmodule SiteChecker.SiteCheckControllerTest do
   use SiteChecker.ConnCase
 
   import SiteChecker.AccountUserSetup
+  import SiteChecker.AppHelper
 
   alias SiteChecker.SiteCheck
   @valid_attrs %{name: "some content", scheduled: true}
@@ -35,7 +36,7 @@ defmodule SiteChecker.SiteCheckControllerTest do
   end
 
   test "shows chosen resource", %{conn: conn} do
-    site_check = Repo.insert! %SiteCheck{}
+    site_check = Repo.insert! %SiteCheck{account_id: current_account(conn).id}
     conn = get conn, site_check_path(conn, :show, site_check)
     assert html_response(conn, 200) =~ "Show site check"
   end
@@ -47,26 +48,26 @@ defmodule SiteChecker.SiteCheckControllerTest do
   end
 
   test "renders form for editing chosen resource", %{conn: conn} do
-    site_check = Repo.insert! %SiteCheck{}
+    site_check = Repo.insert! %SiteCheck{account_id: current_account(conn).id}
     conn = get conn, site_check_path(conn, :edit, site_check)
     assert html_response(conn, 200) =~ "Edit site check"
   end
 
   test "updates chosen resource and redirects when data is valid", %{conn: conn} do
-    site_check = Repo.insert! %SiteCheck{}
+    site_check = Repo.insert! %SiteCheck{account_id: current_account(conn).id}
     conn = put conn, site_check_path(conn, :update, site_check), site_check: @valid_attrs
     assert redirected_to(conn) == site_check_path(conn, :show, site_check)
     assert Repo.get_by(SiteCheck, @valid_attrs)
   end
 
   test "does not update chosen resource and renders errors when data is invalid", %{conn: conn} do
-    site_check = Repo.insert! %SiteCheck{}
+    site_check = Repo.insert! %SiteCheck{account_id: current_account(conn).id}
     conn = put conn, site_check_path(conn, :update, site_check), site_check: @invalid_attrs
     assert html_response(conn, 200) =~ "Edit site check"
   end
 
   test "deletes chosen resource", %{conn: conn} do
-    site_check = Repo.insert! %SiteCheck{}
+    site_check = Repo.insert! %SiteCheck{account_id: current_account(conn).id}
     conn = delete conn, site_check_path(conn, :delete, site_check)
     assert redirected_to(conn) == site_check_path(conn, :index)
     refute Repo.get(SiteCheck, site_check.id)
