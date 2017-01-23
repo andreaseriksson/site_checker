@@ -53,9 +53,6 @@ defmodule SiteChecker.SiteCheckController do
 
   def delete(conn, %{"id" => id}) do
     site_check = load_site_check(conn, id)
-
-    # Here we use delete! (with a bang) because we expect
-    # it to always work (and if it does not, it will raise).
     Repo.delete!(site_check)
 
     conn

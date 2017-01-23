@@ -1,0 +1,47 @@
+<%= form_for @changeset, @action, fn f -> %>
+	<%= if @changeset.action do %>
+    <div class="alert alert-danger">
+      <p>Oops, something went wrong! Please check the errors below.</p>
+    </div>
+  <% end %>
+	<hr>
+
+	<%= if @idx > 0 do %>
+		<strong>Step <%= @idx %></strong>
+	<% else %>
+		<strong>Add a step</strong>
+	<% end %>
+
+	<div class="row">
+		<div class="col-xs-3">
+			<%= label f, :action, class: "control-label" %>
+    	<%= select f, :action, SiteChecker.Step.action_options, class: "form-control" %>
+    	<%= error_tag f, :action %>
+		</div>
+		<div class="col-xs-7">
+			<%= label f, :value, class: "control-label" %>
+    	<%= text_input f, :value, class: "form-control" %>
+    	<%= error_tag f, :value %>
+		</div>
+		<div class="col-xs-3">
+			<%= label f, :identifier %>
+			<small>(HTML-attribute)</small>
+			<%= select f, :identifier, SiteChecker.Step.identifier_options, class: "form-control" %>
+		</div>
+		<div class="col-xs-3">
+			<%= label f, :selector, class: "control-label" %>
+    	<%= text_input f, :selector, class: "form-control" %>
+    	<%= error_tag f, :selector %>
+		</div>
+		<div class="col-xs-3">
+			<%= label f, :value, class: "control-label" %>
+    	<%= text_input f, :value, class: "form-control" %>
+    	<%= error_tag f, :value %>
+		</div>
+	</div>
+	<%= submit "Submit", class: "btn btn-primary" %>
+
+	<%= if @idx > 0 do %>
+    <% #= link "Delete", to: site_check_step_path(@conn, :delete, @step.site_check_id, @step), method: :delete, data: [confirm: "Are you sure?"], class: "btn btn-danger" %>
+  <% end %>
+<% end %>

@@ -19,4 +19,12 @@ defmodule SiteChecker.Step do
     |> cast(params, [:action, :identifier, :selector, :value])
     |> validate_required([:action, :identifier, :selector, :value])
   end
+
+  def action_options do
+		%{"Visit URL" => "VISIT_URL", "Fill in field" => "FILL_IN_FIELD", "Click element" => "CLICK"}
+  end
+
+  def identifier_options do
+		%{"Id" => "ID", "Class" => "CLASS", "CSS" => "CSS", "Name" => "NAME"}
+  end
 end

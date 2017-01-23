@@ -1,0 +1,14 @@
+<h3>Steps</h3>
+
+<%= for step <- @steps do %>
+  <% idx = Enum.find_index(@steps, fn(x) -> x == step end) + 1 %>
+  <%= render "form.html", changeset: SiteChecker.Step.changeset(step),
+                          idx: idx,
+                          step: step,
+                          conn: @conn,
+                          action: site_check_step_path(@conn, :update, @site_check, step) %>
+<% end %>
+
+<%= render "form.html", changeset: @changeset,
+												idx: 0,
+                        action: site_check_step_path(@conn, :create, @site_check) %>

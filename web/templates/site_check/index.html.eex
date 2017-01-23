@@ -18,7 +18,7 @@
       <td><%= site_check.scheduled %></td>
 
       <td class="text-right">
-        <%= link "Show", to: site_check_path(@conn, :show, site_check), class: "btn btn-default btn-xs" %>
+        <%= link "Steps", to: site_check_step_path(@conn, :index, site_check), class: "btn btn-default btn-xs" %>
         <%= link "Edit", to: site_check_path(@conn, :edit, site_check), class: "btn btn-default btn-xs" %>
         <%= link "Delete", to: site_check_path(@conn, :delete, site_check), method: :delete, data: [confirm: "Are you sure?"], class: "btn btn-danger btn-xs" %>
       </td>
