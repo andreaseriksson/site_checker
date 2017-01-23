@@ -19,4 +19,12 @@ defmodule SiteChecker.Expectation do
     |> cast(params, [:identify_type, :identify_value, :match_content, :match_type])
     |> validate_required([:identify_type, :identify_value, :match_content, :match_type])
   end
+
+  def match_options do
+    %{
+      "Has element?" => "HAS_ELEMENT",
+      "Element visible?" => "ELEMENT_VISIBLE",
+      "Element has text?" => "ELEMENT_HAS_TEXT"
+    }
+  end
 end

@@ -1,0 +1,15 @@
+<h3>Expectations</h3>
+
+<%= for expectation <- @expectations do %>
+  <% idx = Enum.find_index(@expectations, fn(x) -> x == expectation end) + 1 %>
+  <%= render "form.html", changeset: SiteChecker.Expectation.changeset(expectation),
+                          idx: idx,
+                          expectation: expectation,
+                          conn: @conn,
+                          action: site_check_expectation_path(@conn, :update, @site_check, expectation) %>
+<% end %>
+
+
+<%= render "form.html", changeset: @changeset,
+												idx: 0,
+                        action: site_check_expectation_path(@conn, :create, @site_check) %>
