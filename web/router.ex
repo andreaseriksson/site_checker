@@ -39,6 +39,7 @@ defmodule SiteChecker.Router do
     resources "/site_checks", SiteCheckController do
       resources "/steps", StepController, only: [:index, :create, :update, :delete]
       resources "/expectations", ExpectationController, only: [:index, :create, :update, :delete]
+      resources "/reports", ReportController, only: [:index]
     end
   end
 
