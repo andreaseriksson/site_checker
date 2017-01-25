@@ -5,7 +5,7 @@ defmodule SiteChecker.SiteCheckControllerTest do
   import SiteChecker.AppHelper
 
   alias SiteChecker.SiteCheck
-  @valid_attrs %{name: "some content", scheduled: true}
+  @valid_attrs %{name: "some content", url: "http://www.example.com", scheduled: true}
   @invalid_attrs %{}
 
   setup %{conn: conn} do

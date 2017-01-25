@@ -11,6 +11,10 @@ defmodule SiteChecker.ErrorHandler do
     |> redirect(to: session_path(conn, :new))
   end
 
+  @doc """
+  Called automatically by the line `plug Guardian.Plug.EnsureAuthenticated, handler: SiteChecker.Auth`
+  in the router.
+  """
   def unauthorized(conn, _params) do
     conn
     |> put_flash(:error, "Not logged in")
