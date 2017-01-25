@@ -1,30 +1,26 @@
 <h2>Listing site checks</h2>
 
-<table class="table">
-  <thead>
-    <tr>
-      <th>Account</th>
-      <th>Name</th>
-      <th>Scheduled</th>
-
-      <th></th>
-    </tr>
-  </thead>
-  <tbody>
-<%= for site_check <- @site_checks do %>
-    <tr>
-      <td><%= site_check.account_id %></td>
-      <td><%= site_check.name %></td>
-      <td><%= site_check.scheduled %></td>
-
-      <td class="text-right">
-        <%= link "Steps", to: site_check_step_path(@conn, :index, site_check), class: "btn btn-default btn-xs" %>
-        <%= link "Edit", to: site_check_path(@conn, :edit, site_check), class: "btn btn-default btn-xs" %>
-        <%= link "Delete", to: site_check_path(@conn, :delete, site_check), method: :delete, data: [confirm: "Are you sure?"], class: "btn btn-danger btn-xs" %>
-      </td>
-    </tr>
-<% end %>
-  </tbody>
-</table>
-
 <%= link "New site check", to: site_check_path(@conn, :new) %>
+
+<%= for group <- Enum.chunk(@site_checks, 3, 3, []) do %>
+  <div class="row">
+    <%= for site_check <- group do %>
+      <div class="col-sm-4 col-md-4">
+        <div class="thumbnail">
+          <img src="data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iVVRGLTgiIHN0YW5kYWxvbmU9InllcyI/PjxzdmcgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIiB3aWR0aD0iMjQyIiBoZWlnaHQ9IjIwMCIgdmlld0JveD0iMCAwIDI0MiAyMDAiIHByZXNlcnZlQXNwZWN0UmF0aW89Im5vbmUiPjwhLS0KU291cmNlIFVSTDogaG9sZGVyLmpzLzEwMCV4MjAwCkNyZWF0ZWQgd2l0aCBIb2xkZXIuanMgMi42LjAuCkxlYXJuIG1vcmUgYXQgaHR0cDovL2hvbGRlcmpzLmNvbQooYykgMjAxMi0yMDE1IEl2YW4gTWFsb3BpbnNreSAtIGh0dHA6Ly9pbXNreS5jbwotLT48ZGVmcz48c3R5bGUgdHlwZT0idGV4dC9jc3MiPjwhW0NEQVRBWyNob2xkZXJfMTU5Y2YxZmQ4NzMgdGV4dCB7IGZpbGw6I0FBQUFBQTtmb250LXdlaWdodDpib2xkO2ZvbnQtZmFtaWx5OkFyaWFsLCBIZWx2ZXRpY2EsIE9wZW4gU2Fucywgc2Fucy1zZXJpZiwgbW9ub3NwYWNlO2ZvbnQtc2l6ZToxMnB0IH0gXV0+PC9zdHlsZT48L2RlZnM+PGcgaWQ9ImhvbGRlcl8xNTljZjFmZDg3MyI+PHJlY3Qgd2lkdGg9IjI0MiIgaGVpZ2h0PSIyMDAiIGZpbGw9IiNFRUVFRUUiLz48Zz48dGV4dCB4PSI4OS4zNTAwMDAzODE0Njk3MyIgeT0iMTA1LjQiPjI0MngyMDA8L3RleHQ+PC9nPjwvZz48L3N2Zz4=" alt="...">
+          <div class="caption">
+            <h3><%= site_check.name %></h3>
+            <p>Scheduled: <%= site_check.scheduled %></p>
+            <p>
+              <%= link "Steps", to: site_check_step_path(@conn, :index, site_check), class: "btn btn-default btn-xs" %>
+              <%= link "Expectations", to: site_check_expectation_path(@conn, :index, site_check), class: "btn btn-default btn-xs" %>
+              <br>
+              <%= link "Edit", to: site_check_path(@conn, :edit, site_check), class: "btn btn-default btn-xs" %>
+              <%= link "Delete", to: site_check_path(@conn, :delete, site_check), method: :delete, data: [confirm: "Are you sure?"], class: "btn btn-danger btn-xs" %>
+            </p>
+          </div>
+        </div>
+      </div>
+    <% end %>
+  </div>
+<% end %>

@@ -17,7 +17,7 @@ defmodule SiteChecker.Step do
   def changeset(struct, params \\ %{}) do
     struct
     |> cast(params, [:action, :identifier, :selector, :value])
-    |> validate_required([:action, :identifier, :selector, :value])
+    |> validate_required([:action])
   end
 
   def action_options do

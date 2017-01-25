@@ -1,14 +1,23 @@
-<h3>Steps</h3>
+<div class="row">
+  <div class="col-sm-6">
+    <h2>Steps</h2>
+  </div>
+  <div class="col-sm-6 text-right">
+    <%= link "Preview", to: site_check_result_path(@conn, :index, @site_check.id), data: [remote: true], class: "btn btn-default btn-sm" %>
+  </div>
+</div>
 
-<%= for step <- @steps do %>
-  <% idx = Enum.find_index(@steps, fn(x) -> x == step end) + 1 %>
-  <%= render "form.html", changeset: SiteChecker.Step.changeset(step),
-                          idx: idx,
-                          step: step,
-                          conn: @conn,
-                          action: site_check_step_path(@conn, :update, @site_check, step) %>
-<% end %>
+<div id="steps" class="panel panel-info">
+  <%= for step <- @steps do %>
+    <% idx = Enum.find_index(@steps, fn(x) -> x == step end) + 1 %>
+    <%= render "form.html", changeset: SiteChecker.Step.changeset(step),
+                            idx: idx,
+                            step: step,
+                            conn: @conn,
+                            action: site_check_step_path(@conn, :update, @site_check, step) %>
+  <% end %>
 
-<%= render "form.html", changeset: @changeset,
-												idx: 0,
-                        action: site_check_step_path(@conn, :create, @site_check) %>
+  <%= render "form.html", changeset: @changeset,
+                          idx: 0,
+                          action: site_check_step_path(@conn, :create, @site_check) %>
+</div>

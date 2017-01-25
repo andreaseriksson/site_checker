@@ -1,8 +1,8 @@
 //import $ from "jquery"
 //import "jquery"
 // import "bootstrap-select"
-// global.jQuery = require("jquery")
-// global.bootstrap = require("bootstrap")
+global.jQuery = require("jquery")
+global.bootstrap = require("bootstrap")
 
 // Brunch automatically concatenates all files in your
 // watched paths. Those paths can be configured at
@@ -25,3 +25,6 @@ import "phoenix_html"
 // paths "./socket" or full ones "web/static/js/socket".
 
 // import socket from "./socket"
+
+import Steps from "./steps";
+Steps();
