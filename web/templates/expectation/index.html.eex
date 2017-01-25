@@ -1,15 +1,24 @@
-<h3>Expectations</h3>
+<div class="row">
+  <div class="col-sm-6">
+    <h2>Expectations</h2>
+  </div>
+  <div class="col-sm-6 text-right">
+    <%= link "Preview", to: site_check_result_path(@conn, :index, @site_check.id), data: [remote: true], class: "btn btn-default btn-sm" %>
+  </div>
+</div>
 
-<%= for expectation <- @expectations do %>
-  <% idx = Enum.find_index(@expectations, fn(x) -> x == expectation end) + 1 %>
-  <%= render "form.html", changeset: SiteChecker.Expectation.changeset(expectation),
-                          idx: idx,
-                          expectation: expectation,
-                          conn: @conn,
-                          action: site_check_expectation_path(@conn, :update, @site_check, expectation) %>
-<% end %>
+<div id="expectations" class="panel panel-info">
+  <%= for expectation <- @expectations do %>
+    <% idx = Enum.find_index(@expectations, fn(x) -> x == expectation end) + 1 %>
+    <%= render "form.html", changeset: SiteChecker.Expectation.changeset(expectation),
+                            idx: idx,
+                            expectation: expectation,
+                            conn: @conn,
+                            action: site_check_expectation_path(@conn, :update, @site_check, expectation) %>
+  <% end %>
 
 
-<%= render "form.html", changeset: @changeset,
-												idx: 0,
-                        action: site_check_expectation_path(@conn, :create, @site_check) %>
+  <%= render "form.html", changeset: @changeset,
+                          idx: 0,
+                          action: site_check_expectation_path(@conn, :create, @site_check) %>
+</div>
