@@ -3,6 +3,7 @@ defmodule SiteChecker.UserSocket do
 
   ## Channels
   # channel "room:*", SiteChecker.RoomChannel
+  channel "result:lobby", SiteChecker.ResultChannel
 
   ## Transports
   transport :websocket, Phoenix.Transports.WebSocket
