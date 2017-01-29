@@ -26,7 +26,6 @@ defmodule SiteChecker.Check do
     # TODO: Give it a name and upload to S3
     case screeshot do
       image_name ->
-        "upload"
         params = %{
           "screenshot" => %Plug.Upload{
             content_type: "image/png",
@@ -149,6 +148,6 @@ defmodule SiteChecker.Check do
     #  screenshot: ""
     #}
     error = something
-    errors |> PageCheckErrorHandler.add error
+    errors |> PageCheckErrorHandler.add(error)
   end
 end
