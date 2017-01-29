@@ -19,7 +19,9 @@ defmodule SiteChecker.Mixfile do
   def application do
     [mod: {SiteChecker, []},
      applications: [:phoenix, :phoenix_pubsub, :phoenix_html, :cowboy, :logger, :gettext,
-                    :phoenix_ecto, :postgrex, :comeonin, :bamboo, :bamboo_smtp, :httpoison, :hound],
+                    :phoenix_ecto, :postgrex, :comeonin, :bamboo, :bamboo_smtp, :httpoison,
+                    :hound, :ex_aws, :arc_ecto
+                  ],
      test_coverage: [tool: Coverex.Task]
     ]
   end
@@ -47,7 +49,15 @@ defmodule SiteChecker.Mixfile do
      {:httpoison, "~> 0.10.0"},
      {:floki, "~> 0.11.0"},
      {:hound, "~> 1.0"},
-     {:coverex, "~> 1.4.10", only: :test}
+     {:coverex, "~> 1.4.10", only: :test},
+     {:arc, "~> 0.6.0"},
+     {:arc_ecto, "~> 0.5.0"},
+
+     # If using Amazon S3:
+     {:ex_aws, "~> 1.0.0"},
+     {:hackney, "1.6.1", override: true},
+     # {:httpoison, "~> 0.11.0"},
+     {:sweet_xml, "~> 0.5"}
    ]
   end
 

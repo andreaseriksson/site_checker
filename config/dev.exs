@@ -33,6 +33,10 @@ config :logger, :console, format: "[$level] $message\n"
 # in production as building large stacktraces may be expensive.
 config :phoenix, :stacktrace_depth, 20
 
+# Import the config/dev.secret.exs
+# which should be versioned separately.
+import_config "dev.secret.exs"
+
 # Configure your database
 config :site_checker, SiteChecker.Repo,
   adapter: Ecto.Adapters.Postgres,
@@ -51,3 +55,5 @@ config :site_checker, SiteChecker.Mailer,
   # tls: :if_available, # can be `:always` or `:never`
   # ssl: false, # can be `true`
   retries: 1
+
+config :hound, driver: "phantomjs"

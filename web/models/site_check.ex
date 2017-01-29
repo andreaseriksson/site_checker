@@ -1,10 +1,12 @@
 defmodule SiteChecker.SiteCheck do
   use SiteChecker.Web, :model
+  use Arc.Ecto.Schema
 
   schema "site_checks" do
     field :name, :string
     field :url, :string
     field :scheduled, :boolean, default: false
+    field :screenshot, SiteChecker.Screenshot.Type
     belongs_to :account, SiteChecker.Account
     has_many :steps, SiteChecker.Step
     has_many :expectations, SiteChecker.Expectation
@@ -20,6 +22,16 @@ defmodule SiteChecker.SiteCheck do
     |> cast(params, [:name, :url, :scheduled])
     |> validate_required([:name, :url, :scheduled])
     |> validate_url(:url, message: "URL is not a valid URL!")
+  end
+
+  @doc """
+  Only just for uploading the screenshot
+  """
+  def screenshot_changeset(struct, params \\ %{}) do
+    struct
+    |> cast(params, [])
+    |> cast_attachments(params, [:screenshot])
+    |> validate_required([:screenshot])
   end
 
   def validate_url(changeset, field, options \\ []) do

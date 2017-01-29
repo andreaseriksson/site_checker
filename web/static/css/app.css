@@ -1,1 +1,6 @@
 /* This file is for your main application css. */
+
+.site-check-screenshot {
+  min-height: 140px;
+  background-size: cover;
+}

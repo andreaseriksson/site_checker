@@ -4,14 +4,43 @@ defmodule SiteChecker.Check do
   alias SiteChecker.{Repo, SiteCheck, Step, Expectation, PageCheckErrorHandler}
   # Start phantomjs --wd
 
-  def visit_url_and_screenshot(page_test) do
+  def visit_url_and_screenshot(site_check) do
+    # alias SiteChecker.{ SiteCheck, Check, Repo }
+    # r Check
+    # site_check = SiteCheck |> Repo.get(2)
+    # site_check |> Check.visit_url_and_screenshot
+
+    image_name = site_check.name
+                 |> String.downcase
+                 |> String.replace(~r/[^a-z]/, "-")
+
+    image_name = "#{site_check.id}-#{image_name}.png"
+
     {_, errors} = PageCheckErrorHandler.start_link
 
     Hound.start_session
-    navigate_to "http://localhost:3000"
+    navigate_to site_check.url
+    screeshot = take_screenshot(image_name)
+    IO.inspect screeshot
 
     # TODO: Give it a name and upload to S3
-    take_screenshot()
+    case screeshot do
+      image_name ->
+        "upload"
+        params = %{
+          "screenshot" => %Plug.Upload{
+            content_type: "image/png",
+            filename: image_name,
+            path: Path.expand("./#{image_name}")
+          }
+        }
+        changeset = SiteChecker.SiteCheck.screenshot_changeset(site_check, params)
+        IO.inspect changeset
+        IO.inspect Repo.update(changeset)
+        File.rm(image_name)
+      _ ->
+        IO.inspect "Handle error"
+    end
 
     Hound.end_session
     {:ok, errors}

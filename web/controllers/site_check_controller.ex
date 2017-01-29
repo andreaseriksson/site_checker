@@ -17,7 +17,9 @@ defmodule SiteChecker.SiteCheckController do
     changeset = SiteCheck.changeset(new_site_check(conn), site_check_params)
 
     case Repo.insert(changeset) do
-      {:ok, _site_check} ->
+      {:ok, site_check} ->
+        Task.async fn -> SiteChecker.Check.visit_url_and_screenshot(site_check) end
+
         conn
         |> put_flash(:info, "Site check created successfully.")
         |> redirect(to: site_check_path(conn, :index))
