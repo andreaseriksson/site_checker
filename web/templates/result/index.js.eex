@@ -1,3 +1,3 @@
-jQuery("#modal-container").html("<%= escape_javascript(render("index.html", conn: @conn)) %>");
+jQuery("#modal-container").html("<%= escape_javascript(render("index.html", conn: @conn, site_check: @site_check, results: @results)) %>");
 jQuery('#result-modal').modal('show');
 

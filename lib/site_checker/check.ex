@@ -1,13 +1,13 @@
 defmodule SiteChecker.Check do
   use Hound.Helpers
   import Ecto.Query
-  alias SiteChecker.{Repo, SiteCheck, Step, Expectation, PageCheckErrorHandler}
+  alias SiteChecker.{Repo, SiteCheck, Step, Expectation, ResultBuilder}
   # Start phantomjs --wd
 
   def visit_url_and_screenshot(site_check) do
     # alias SiteChecker.{ SiteCheck, Check, Repo }
     # r Check
-    # site_check = SiteCheck |> Repo.get(2)
+    # site_check = SiteCheck |> Repo.get(6) |> Repo.preload(:account) |> Repo.preload(:steps) |> Repo.preload(:expectations)
     # site_check |> Check.visit_url_and_screenshot
 
     image_name = site_check.name
@@ -16,12 +16,11 @@ defmodule SiteChecker.Check do
 
     image_name = "#{site_check.id}-#{image_name}.png"
 
-    {_, errors} = PageCheckErrorHandler.start_link
+    {_, errors} = ResultBuilder.start_link
 
     Hound.start_session
     navigate_to site_check.url
     screeshot = take_screenshot(image_name)
-    IO.inspect screeshot
 
     # TODO: Give it a name and upload to S3
     case screeshot do
@@ -33,9 +32,10 @@ defmodule SiteChecker.Check do
             path: Path.expand("./#{image_name}")
           }
         }
-        changeset = SiteChecker.SiteCheck.screenshot_changeset(site_check, params)
-        IO.inspect changeset
-        IO.inspect Repo.update(changeset)
+
+        SiteChecker.SiteCheck.screenshot_changeset(site_check, params)
+        |> Repo.update
+
         File.rm(image_name)
       _ ->
         IO.inspect "Handle error"
@@ -45,100 +45,132 @@ defmodule SiteChecker.Check do
     {:ok, errors}
   end
 
-  def start do
+  def start(site_check) do
     IO.puts "starting"
     Hound.start_session
 
-    {_, errors} = PageCheckErrorHandler.start_link
+    {_, results} = ResultBuilder.start_link
 
-    page_test = Repo.get!(PageTest, 2)
-                |> Repo.preload([steps: (from s in Step, order_by: s.id) ])
-                |> Repo.preload([expectations: (from e in Expectation, order_by: e.id) ])
+    navigate_to site_check.url
 
-    for step <- page_test.steps do
+    for step <- site_check.steps do
       case step.action do
         "VISIT_URL" ->
-          visit_url(step, errors)
+          visit_url(step, results)
         "FILL_IN_FIELD" ->
-          fill_in_field(step, errors)
+          fill_in_field(step, results)
         "CLICK" ->
-          click_element(step, errors)
+          click_element(step, results)
         _ ->
          nil
          # Something is really wrong
       end
     end
 
-    for expectation <- page_test.expectations do
+    for expectation <- site_check.expectations do
       case expectation.match_type do
+        "HAS_VISIBLE" ->
+          has_element(expectation, results)
         "ELEMENT_VISIBLE" ->
-          element_visible(expectation, errors)
+          element_visible(expectation, results)
+        "ELEMENT_HAS_TEXT" ->
+          element_has_text(expectation, results)
         _ ->
          nil
          # Something is really wrong
       end
     end
-    # take_screenshot()
-    # run_steps
-    # run_expectations
 
-		# Floki.find(page_source(), "tbody")
-    # |> Floki.find("tr")
-    # |> Enum.map(fn(tr) -> Floki.find(tr, "td") end)
-    # |> IO.inspect
-    Hound.end_session()
+    Hound.end_session
+    ResultBuilder.result(results)
   end
 
-	def run_steps do
-    navigate_to "http://localhost:3000/app"
-		find_element(:id, "app_user_email") |> fill_field('andreas@codered.se')
-		el = find_element(:id, "app_user_password")
-		fill_field(el, 'teddybear')
-		submit_element(el)
-		navigate_to "http://localhost:3000/app/flows"
-	end
-
-	def run_expectations do
-		element = find_element(:class, "breadcrumb")
-		IO.inspect element_displayed?(element)
-
-		element2 = find_element(:css, ".content-header h1")
-		IO.inspect inner_text(element2)
-
-    IO.inspect element?(:class, "smurf")
-    IO.inspect visible_in_page?(~r/Awesome first flow/)
-	end
-
-  defp visit_url(step, errors) do
-    navigate_to step.value
-    {:ok, errors}
+  defp visit_url(step, results) do
+    result = try do
+      navigate_to step.value
+      :ok
+    rescue
+      _ -> :error
+    end
+    attach_result(results, {:step, step, result})
   end
 
-  defp fill_in_field(step, _errors) do
-    identifier = String.downcase(step.identifier) |> String.to_atom()
-		element = find_element(identifier, step.selector)
-    fill_field(element, step.value)
+  defp fill_in_field(step, results) do
+    result = try do
+      identifier = String.downcase(step.identifier) |> String.to_atom()
+		  element = find_element(identifier, step.selector)
+      fill_field(element, step.value)
+      :ok
+    rescue
+      _ -> :error
+    end
+    attach_result(results, {:step, step, result})
   end
 
-  defp click_element(step, _errors) do
-    identifier = String.downcase(step.identifier) |> String.to_atom()
-		element = find_element(identifier, step.selector)
-    click element
+  defp click_element(step, results) do
+    result = try do
+      identifier = String.downcase(step.identifier) |> String.to_atom()
+		  element = find_element(identifier, step.selector)
+      click element
+      :ok
+    rescue
+      _ -> :error
+    end
+    attach_result(results, {:step, step, result})
   end
 
-  defp element_visible(expectation, _errors) do
-    identifier = String.downcase(expectation.identify_type) |> String.to_atom()
-		element = find_element(identifier, expectation.identify_value)
+  defp has_element(expectation, results) do
+    # IO.inspect element?(:css, '.info-box-text')
+    # IO.inspect element?(:class, "block")
+    # IO.inspect element?(:id, "foo")
+    result = try do
+      identifier = String.downcase(expectation.identify_type) |> String.to_atom()
+		  element = find_element(identifier, expectation.identify_value)
+      element_displayed?(element)
+      :ok
+    rescue
+      _ -> :error
+    end
+    attach_result(results, {:expectation, expectation, result})
+  end
+
+  defp element_visible(expectation, results) do
     # IO.inspect find_element(:css, ".info-box-text")
     # IO.inspect element?(:css, '.info-box-text')
     # IO.inspect element?(:class, "block")
     # IO.inspect element?(:id, "foo")
     # IO.inspect fetch_errors()
     # IO.inspect element_displayed?(element)
-    {:ok, element_displayed?(element) }
+    # IO.inspect visible_in_page?(~r/Awesome first flow/)
+    result = try do
+      identifier = String.downcase(expectation.identify_type) |> String.to_atom()
+		  element = find_element(identifier, expectation.identify_value)
+      element_displayed?(element)
+      :ok
+    rescue
+      _ -> :error
+    end
+    attach_result(results, {:expectation, expectation, result})
   end
 
-  defp attach_result(errors, something) do
+  defp element_has_text(expectation, results) do
+    # element2 = find_element(:css, ".content-header h1")
+    #	IO.inspect inner_text(element2)
+    # IO.inspect visible_in_page?(~r/Awesome first flow/)
+    result = try do
+      identifier = String.downcase(expectation.identify_type) |> String.to_atom()
+		  element = find_element(identifier, expectation.identify_value)
+      element_displayed?(element)
+      :ok
+    rescue
+      _ -> :error
+    end
+    attach_result(results, {:expectation, expectation, result})
+  end
+
+  defp attach_result(results, result) do
+    # IO.inspect fetch_errors()
+
     # Format an error
     #%ScrapeTest.Report{
     #  event: "Some string description",
@@ -147,7 +179,12 @@ defmodule SiteChecker.Check do
     #  text: "",
     #  screenshot: ""
     #}
-    error = something
-    errors |> PageCheckErrorHandler.add(error)
+    case result do
+      {_, _, :error} ->
+        take_screenshot()
+      _ -> nil # Do nothing
+    end
+
+    ResultBuilder.add(results, result)
   end
 end

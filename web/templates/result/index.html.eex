@@ -6,7 +6,36 @@
         <h4 class="modal-title">Results</h4>
       </div>
       <div class="modal-body">
-        ...
+        <table class="table">
+          <thead>
+            <tr>
+              <th width="90%">Kind</th>
+              <th>Result</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Visit: `<%= @site_check.url %>`</td>
+              <td><strong>ok</strong></td>
+            </tr>
+            <%= for {kind, model, result} <- @results do %>
+              <tr>
+                <td>
+                  <%= if kind == :step do %>
+                    <%= SiteChecker.Step.readable(model) %>
+                  <% else %>
+                    <%= SiteChecker.Expectation.readable(model) %>
+                  <% end %>
+                </td>
+                <td>
+                  <strong>
+                    <%= result %>
+                  </strong>
+                </td>
+              </tr>
+            <% end %>
+          </tbody>
+        </table>
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>

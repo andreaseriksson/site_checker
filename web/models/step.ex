@@ -27,4 +27,23 @@ defmodule SiteChecker.Step do
   def identifier_options do
 		%{"Id" => "ID", "Class" => "CLASS", "CSS" => "CSS", "Name" => "NAME"}
   end
+
+  def readable(step) do
+    if Enum.find(~w(FILL_IN_FIELD CLICK), fn(action) -> action == step.action end) do
+      action = Enum.find(action_options, fn {key, val} -> val == step.action end) |> elem(0)
+      identifier = Enum.find(identifier_options, fn {key, val} -> val == step.identifier end) |> elem(0)
+
+      "#{action} identified by #{identifier} #{format_selector_and_value(step)}"
+    else
+      "Visit URL `#{step.value}`"
+    end
+  end
+
+  defp format_selector_and_value(step) do
+    if step.value do
+      "`#{step.selector}` with `#{step.value}`"
+    else
+      "`#{step.selector}`"
+    end
+  end
 end

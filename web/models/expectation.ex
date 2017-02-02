@@ -27,4 +27,19 @@ defmodule SiteChecker.Expectation do
       "Element has text?" => "ELEMENT_HAS_TEXT"
     }
   end
+
+  def readable(expectation) do
+    case [expectation.identify_type, expectation.identify_value, expectation.match_content, expectation.match_type] do
+      [_, _, _, "ELEMENT_VISIBLE"] ->
+        "Page should have element "
+      [_, _, _, "ELEMENT_HAS_TEXT"] ->
+        "Page should have text.."
+      [_, _, _, "HAS_ELEMENT"] ->
+        "Page should have element `#{expectation.identify_value}`"
+    end
+    #match_type = Enum.find(match_options, fn {key, val} -> val == expectation.match_type end) |> elem(0)
+    #identify_type = Enum.find(SiteChecker.Step.identifier_options, fn {key, val} -> val == expectation.identify_type end) |> elem(0)
+
+    "Page should have element `#{expectation.identify_value}` with content `#{expectation.match_content}`"
+  end
 end

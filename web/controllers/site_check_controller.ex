@@ -4,7 +4,7 @@ defmodule SiteChecker.SiteCheckController do
   alias SiteChecker.SiteCheck
 
   def index(conn, _params) do
-    site_checks = SiteChecker.Repo.preload(current_account(conn), :site_checks).site_checks
+    site_checks = Repo.preload(current_account(conn), [site_checks: (from s in SiteCheck, order_by: s.id)]).site_checks
     render(conn, "index.html", site_checks: site_checks)
   end
 
@@ -45,6 +45,7 @@ defmodule SiteChecker.SiteCheckController do
 
     case Repo.update(changeset) do
       {:ok, site_check} ->
+        SiteChecker.Check.visit_url_and_screenshot(site_check)
         conn
         |> put_flash(:info, "Site check updated successfully.")
         |> redirect(to: site_check_path(conn, :show, site_check))
